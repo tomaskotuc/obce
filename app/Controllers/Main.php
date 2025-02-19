@@ -31,11 +31,20 @@ class Main extends BaseController
         public function index()
         {
 
-                echo view ("index.php", $this->data);
+            $this->data["obce"] = $this->obec->select("obec.nazev, Count(*) as pocet")->join("cast_obce", "obec.kod = cast_obce.obec", "inner")->join("ulice", "ulice.cast_obce = cast_obce.kod", "inner")->join("adresni_misto", "adresni_misto.ulice = ulice.kod", "inner")->join("okres", "okres.kod = obec.okres")->groupBy("obec.kod")->orderBy("pocet", "desc")->paginate(20);
+
+            $pager = $this->obec->pager;
+            $this->data["pager"] = $pager;
+
+            echo view ("index", $this->data);
         }
 
-        public function okres($kod) {
-            $this->data["obce"] = $this->obec->join("cast_obce", "obec.kod = cast_obce.obec", "inner")->join("ulice", "ulice.cast_obce = cast_obce.kod", "inner")->join("adresni_misto", "adresni_misto.ulice = ulice.kod", "inner")->join("okres", "okres.kod = obec.okres")->where("okres.kod", $kod)->orderBy("pocet", "desc")->paginate(20);
+        public function okres($kod, $perPage) {
+            $this->data["kod"] = $kod;
+            $this->data["perPage"] = $perPage;
+            $this->data["obce"] = $this->obec->select("obec.nazev, Count(*) as pocet")->join("cast_obce", "obec.kod = cast_obce.obec", "inner")->join("ulice", "ulice.cast_obce = cast_obce.kod", "inner")->join("adresni_misto", "adresni_misto.ulice = ulice.kod", "inner")->join("okres", "okres.kod = obec.okres")->where("okres.kod", $kod)->groupBy("obec.kod")->orderBy("pocet", "desc")->paginate($perPage);
+            $pager = $this->obec->pager;
+            $this->data["pager"] = $pager;
             echo view ("okres", $this->data);
         }
 

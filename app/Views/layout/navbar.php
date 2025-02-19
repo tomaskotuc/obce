@@ -11,7 +11,7 @@
                     <?php
                      foreach($okresy as $okres) {
                         echo "<li class='nav-item'>";
-                        echo "<a class='nav-link' href='".base_url("okres/".$okres->kod)."'>".$okres->nazev."</a>";
+                        echo "<a class='nav-link' href='".base_url("okres/".$okres->kod)."/perPage/10'>".$okres->nazev."</a>";
                         echo "</li>";
                         
                     }?>
